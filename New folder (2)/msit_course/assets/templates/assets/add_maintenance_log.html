@@ -1,0 +1,34 @@
+﻿{% extends "assets/base.html" %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Add Maintenance Record</h1>
+    <a href="{% url 'asset-detail' asset.pk %}" class="btn btn-secondary">&larr; Back to {{ asset.name }}</a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">
+            Logging repair for: <strong>{{ asset.name }}</strong> ({{ asset.get_asset_type_display }})
+        </h5>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="mb-3">
+                <label for="{{ field.id_for_label }}" class="form-label fw-bold">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <div class="text-danger">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-warning">Save Maintenance Record</button>
+            <a href="{% url 'asset-detail' asset.pk %}" class="btn btn-outline-secondary ms-2">Cancel</a>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
