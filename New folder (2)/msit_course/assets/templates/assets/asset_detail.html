@@ -1,0 +1,68 @@
+{% extends "assets/base.html" %} {% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1>{{ asset.name }}</h1>
+  <a href="{% url 'asset-list' %}" class="btn btn-secondary"
+    >&larr; Back to List</a
+  >
+</div>
+
+{# Asset Info Card #}
+<div class="card mb-4">
+  <div class="card-header">
+    <h5 class="mb-0">Asset Information</h5>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-3">
+        <strong>Type:</strong><br />{{ asset.get_asset_type_display }}
+      </div>
+      <div class="col-md-3"><strong>Cost:</strong><br />${{ asset.cost }}</div>
+      <div class="col-md-3">
+        <strong>Assigned To:</strong><br />
+        {% if asset.assigned_to %} {{ asset.assigned_to.username }} {% else %}
+        <span class="text-danger">Unassigned</span>
+        {% endif %}
+      </div>
+      <div class="col-md-3">
+        <strong>Registered On:</strong><br />
+        {{ asset.created_at|date:"M d, Y" }}
+      </div>
+    </div>
+  </div>
+</div>
+
+{# Maintenance History Section #}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3>Maintenance History</h3>
+  {# Part 2: Add Maintenance Record Button #}
+  <a href="{% url 'add-maintenance-log' asset.pk %}" class="btn btn-warning">
+    + Add Maintenance Record
+  </a>
+</div>
+
+{% if maintenance_logs %}
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Service Date</th>
+      <th>Description</th>
+      <th>Repair Cost</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for log in maintenance_logs %}
+    <tr>
+      <td>{{ log.service_date|date:"M d, Y" }}</td>
+      <td>{{ log.description }}</td>
+      <td>${{ log.cost }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="alert alert-info">
+  No maintenance records found for this asset. Click
+  <strong>"Add Maintenance Record"</strong> to log the first one.
+</div>
+{% endif %} {% endblock %}
